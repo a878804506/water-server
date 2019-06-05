@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyh.water.mapper.MenuPermissionMapper">
+
+	<select id="getAllMenu"  resultType="com.cyh.water.pojo.MenuPermission">
+		SELECT
+			t2.id,
+			t2.`name`,
+			t2.type,
+			t2.url,
+			t2.parentid parentId,
+			t2.order_list orderList,
+			t2.icon_cls iconCls,
+			t2.`status`,
+			t2.remark
+		FROM
+			menupermission t2
+	</select>
+
+	<select id="getMenuPermissionByRoleId"  resultType="java.lang.Integer">
+		SELECT
+			t.menuid
+		FROM
+			role_menu t
+		WHERE
+			t.roleid = #{rid}
+	</select>
+
+	<delete id="deleteMenuPermissionByRoleId" parameterType="java.lang.Integer" >
+		delete from role_menu where roleid = #{rid}
+	</delete>
+
+	<insert id="insertMenuPermissionByRoleId"  parameterType="java.lang.String">
+		insert into role_menu(roleid,menuid) values
+		<foreach collection="permissionsId" item="pid"   separator="," close=";">
+			(#{rid},#{pid})
+		</foreach>
+	</insert>
+
+	<select id="getAllMenusAndPermissionsByRoleIds"  resultType="com.cyh.water.pojo.MenuPermission">
+		SELECT
+			t.id,
+			t.`name`,
+			t.type,
+			t.url,
+			t.parentid parentId,
+			t.order_list orderList,
+			t.icon_cls iconCls,
+			t.`status`,
+			t.remark
+		FROM
+			menupermission t
+		WHERE
+			t.id IN ( SELECT t1.menuid FROM role_menu t1 WHERE t1.roleid IN (
+				<foreach collection="roleIds" item="rid" separator=",">
+					#{rid}
+				</foreach>
+			 ) )
+	</select>
+</mapper>
