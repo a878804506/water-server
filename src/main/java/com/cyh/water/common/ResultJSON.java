@@ -1,11 +1,8 @@
 package com.cyh.water.common;
 
-import lombok.Data;
-
 /**
  * 前端请求结果返回实体类
  */
-@Data
 public class ResultJSON {
 
     // 定义返回值状态
@@ -29,5 +26,29 @@ public class ResultJSON {
         this.status = status;
         this.message = message;
         this.data = data;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

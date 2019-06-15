@@ -1,6 +1,7 @@
 package com.cyh.water.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.cyh.water.common.Constants;
 import com.cyh.water.common.ResultJSON;
 import com.cyh.water.pojo.User;
 import com.cyh.water.service.UserService;
@@ -27,10 +28,10 @@ public class UserController {
                 return JSON.toJSONString(new ResultJSON(Constants.REFUSE,"验证码错误,请重试！"));
         }else{
             return JSON.toJSONString(new ResultJSON(Constants.REFUSE,"非法验证码,请重试！"));
-        }
-        if(user.getName() == null || user.getPassword() == null){
-            return JSON.toJSONString(new ResultJSON(Constants.REFUSE,"账号密码不能为空！"));
         }*/
+        if(user.getUserName() == null || user.getPassword() == null){
+            return JSON.toJSONString(new ResultJSON(Constants.REFUSE,"账号密码不能为空！"));
+        }
         ResultJSON resultJSON = userService.loginUser(user);
         return JSON.toJSONString(resultJSON);
     }

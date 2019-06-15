@@ -1,8 +1,5 @@
 package com.cyh.water.pojo;
 
-import lombok.Data;
-
-@Data
 public class ConfigureInfo implements java.io.Serializable{
     private static final long serialVersionUID = 1L;
     private Integer id;
@@ -11,4 +8,52 @@ public class ConfigureInfo implements java.io.Serializable{
     private String updateTables; //name =  updateTables 时 有用 ， 需要创建的表，以逗号隔开
     private String time;  // name = excel 时  time是指修改时间    name =  updateTables 时   time是指创建及初始化表的时机
     private String update_user;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getUpdateTables() {
+        return updateTables;
+    }
+
+    public void setUpdateTables(String updateTables) {
+        this.updateTables = updateTables;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getUpdate_user() {
+        return update_user;
+    }
+
+    public void setUpdate_user(String update_user) {
+        this.update_user = update_user;
+    }
 }
