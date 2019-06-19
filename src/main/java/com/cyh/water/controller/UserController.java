@@ -5,6 +5,7 @@ import com.cyh.water.common.Constants;
 import com.cyh.water.common.ResultJSON;
 import com.cyh.water.pojo.User;
 import com.cyh.water.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,13 +23,13 @@ public class UserController {
     // 登录验证
     @RequestMapping(value="loginUser",method = RequestMethod.POST)
     public String loginUser(HttpServletRequest request,User user){
-        /*Object sessionCheckCode = request.getSession().getAttribute("checkCode");
+        Object sessionCheckCode = request.getSession().getAttribute("checkCode");
         if(StringUtils.isNoneEmpty(user.getYzm()) && sessionCheckCode != null && !"".equals(sessionCheckCode)){
             if (!user.getYzm().equalsIgnoreCase(sessionCheckCode.toString()))
                 return JSON.toJSONString(new ResultJSON(Constants.REFUSE,"验证码错误,请重试！"));
         }else{
             return JSON.toJSONString(new ResultJSON(Constants.REFUSE,"非法验证码,请重试！"));
-        }*/
+        }
         if(user.getUserName() == null || user.getPassword() == null){
             return JSON.toJSONString(new ResultJSON(Constants.REFUSE,"账号密码不能为空！"));
         }

@@ -31,6 +31,6 @@ public final class EncryptionAndDecryptionUtil {
     }
 
     public static void main(String[] args) throws MyException {
-        System.out.println(getEncryptionPassword("cyh19930807"));
+        System.out.println(getEncryptionPassword("111111"));
     }
 }

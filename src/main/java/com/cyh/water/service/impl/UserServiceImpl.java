@@ -40,8 +40,7 @@ public class UserServiceImpl implements UserService {
         } else if(loginuser.getStruts().equals("0")){ //账号处于冻结状态
             return new ResultJSON(Constants.REFUSE,"此账号已冻结，请联系管理员！");
         }else {
-            // 登陆成功后 返回基本登陆后的信息
-            Map<String, Object> resultData = new HashMap<>();
+
             //获取系统登录用户的ip信息
             JSONObject IPInfo = GetUserIpUtil.getUserIpAddress(RequestUtil.getRequest());
             if (IPInfo != null && 0 == (int) IPInfo.get("code")) {
@@ -59,7 +58,10 @@ public class UserServiceImpl implements UserService {
                 loginuser.setCity("未知城市");
             }
 
-            //根据用户id获取用户的有效角色的id
+           /*
+           // 登陆成功后 返回基本登陆后的信息
+            Map<String, Object> resultData = new HashMap<>();
+           //根据用户id获取用户的有效角色的id
             List<Integer> roleIds = userMapper.getRolesListByUserId(loginuser.getId());
             if (null != roleIds && roleIds.size() != 0) {
                 // 菜单和权限集合
@@ -85,9 +87,6 @@ public class UserServiceImpl implements UserService {
             // 登录信息存入resultData
             resultData.put("loginuser", loginuser);
 
-            //以秒为单位，即在没有活动4小时后，session将失效
-//            session.setMaxInactiveInterval(14400);
-
             //如果开启了聊天服务  就获取聊天服务器ip  以方便页面的WebSocket连接聊天服务器
             resultData.put("webSocketChatSwitch", Properties.webSocketChatSwitch);
 
@@ -98,11 +97,12 @@ public class UserServiceImpl implements UserService {
                 Thread thread = new Thread(slu);
                 thread.start();
             }
-
+*/
             // 将时间转化成有格式的字符串
             loginuser.setTime(new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT).format(new Date()));
             userMapper.updateUser(loginuser); // 将此次登录的时间记录
-            return new ResultJSON(Constants.SUCCESS, "登陆成功！", resultData);
+            return new ResultJSON(Constants.SUCCESS, "登陆成功！",
+                    JWTUtil.sign(loginuser.getUserName(),loginuser.getId()));
         }
     }
 
