@@ -1,15 +1,15 @@
 package com.cyh.water.controller;
 
 import com.cyh.water.utils.CheckCodeUtil;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@Controller
+@RestController
 public class ImageCodeController {
 
     @RequestMapping("createImageCode")
@@ -25,7 +25,7 @@ public class ImageCodeController {
         HttpSession session = request.getSession(true);
         session.setAttribute("checkCode", checkCode.toLowerCase());
         //生成图片
-        int width = 120, height = 48;
+        int width = 120, height = 47;
         CheckCodeUtil.outputImage(width, height, response.getOutputStream(), checkCode);
     }
 }
