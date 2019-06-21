@@ -37,6 +37,12 @@ public class UserController {
         return JSON.toJSONString(resultJSON);
     }
 
+    @RequestMapping("getInfo")
+    public String getInfo(){
+
+        return "";
+    }
+
     /*// 调用计算器
     @ResponseBody
     @RequestMapping(value = "jisuanqi", produces = "text/html;charset=utf-8")
