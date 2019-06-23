@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService {
         } else if(loginuser.getStruts().equals("0")){ //账号处于冻结状态
             return new ResultJSON(Constants.REFUSE,"此账号已冻结，请联系管理员！");
         }else {
-
             //获取系统登录用户的ip信息
             JSONObject IPInfo = GetUserIpUtil.getUserIpAddress(RequestUtil.getRequest());
             if (IPInfo != null && 0 == (int) IPInfo.get("code")) {
@@ -57,53 +56,51 @@ public class UserServiceImpl implements UserService {
                 loginuser.setRegion("未知省份");
                 loginuser.setCity("未知城市");
             }
-
-           /*
-           // 登陆成功后 返回基本登陆后的信息
-            Map<String, Object> resultData = new HashMap<>();
-           //根据用户id获取用户的有效角色的id
-            List<Integer> roleIds = userMapper.getRolesListByUserId(loginuser.getId());
-            if (null != roleIds && roleIds.size() != 0) {
-                // 菜单和权限集合
-                List<MenuPermission> allMenusAndPermissions = menuPermissionService.getAllMenusAndPermissionsByRoleIds(roleIds);
-                // 分离的菜单
-                List<MenuPermission> menus = new ArrayList<>();
-                // 分离的页面内权限
-                List<MenuPermission> permissions = new ArrayList<>();
-
-                for (MenuPermission mp : allMenusAndPermissions) {
-                    if ("menu".equals(mp.getType())) {
-                        menus.add(mp);
-                    } else if ("permission".equals(mp.getType())) {
-                        permissions.add(mp);
-                    }
-                }
-                //变成菜单tree,然后存入resultData
-                resultData.put("menuList", JSON.toJSONString(MenuPermissionUtil.getMenuTree(menus)));
-                //用户的授权 并存入resultData
-                resultData.put("permissionList", permissions);
-            }
-
-            // 登录信息存入resultData
-            resultData.put("loginuser", loginuser);
-
-            //如果开启了聊天服务  就获取聊天服务器ip  以方便页面的WebSocket连接聊天服务器
-            resultData.put("webSocketChatSwitch", Properties.webSocketChatSwitch);
-
-            if (Properties.webSocketChatSwitch) {  //再在resultData中存入聊天服务器所在地址
-                resultData.put("webSocketChatAddress", Properties.webSocketChatAddress);
-                //启动一个线程将当前登陆用户在线状态更新到redis中,并且再zk上创建一个有规律的子节点
-                SessionListenerUtil slu = new SessionListenerUtil(loginuser.getId());
-                Thread thread = new Thread(slu);
-                thread.start();
-            }
-*/
             // 将时间转化成有格式的字符串
             loginuser.setTime(new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT).format(new Date()));
             userMapper.updateUser(loginuser); // 将此次登录的时间记录
-            return new ResultJSON(Constants.SUCCESS, "登陆成功！",
-                    JWTUtil.sign(loginuser.getUserName(),loginuser.getId()));
+            return new ResultJSON(Constants.SUCCESS, "登陆成功！", JWTUtil.sign(loginuser.getId()));
         }
+    }
+
+    @Override
+    public ResultJSON getInfo(String token) {
+        // 获取当前登录的用户id
+        Integer userId = JWTUtil.getUserId(token);
+        // 登陆成功后 返回基本登陆后的信息
+        Map<String, Object> resultData = new HashMap<>();
+        //根据用户id获取用户的有效角色的id
+        List<Integer> roleIds = userMapper.getRolesListByUserId(userId);
+        if (null != roleIds && roleIds.size() != 0) {
+            // 菜单和权限集合
+            List<MenuPermission> allMenusAndPermissions = menuPermissionService.getAllMenusAndPermissionsByRoleIds(roleIds);
+            // 分离的菜单
+            List<MenuPermission> menus = new ArrayList<>();
+            // 分离的页面内权限
+            List<MenuPermission> permissions = new ArrayList<>();
+
+            for (MenuPermission mp : allMenusAndPermissions) {
+                if ("menu".equals(mp.getType())) {
+                    menus.add(mp);
+                } else if ("permission".equals(mp.getType())) {
+                    permissions.add(mp);
+                }
+            }
+            //变成菜单tree,然后存入resultData
+            resultData.put("menuList", JSON.toJSONString(MenuPermissionUtil.getMenuTree(menus)));
+            //用户的授权 并存入resultData
+            resultData.put("permissionList", permissions);
+        }
+        //如果开启了聊天服务  就获取聊天服务器ip  以方便页面的WebSocket连接聊天服务器
+        resultData.put("webSocketChatSwitch", Properties.webSocketChatSwitch);
+        if (Properties.webSocketChatSwitch) {  //再在resultData中存入聊天服务器所在地址
+            resultData.put("webSocketChatAddress", Properties.webSocketChatAddress);
+            //启动一个线程将当前登陆用户在线状态更新到redis中,并且再zk上创建一个有规律的子节点
+            SessionListenerUtil slu = new SessionListenerUtil(userId);
+            Thread thread = new Thread(slu);
+            thread.start();
+        }
+        return new ResultJSON(Constants.SUCCESS, "获取信息成功！", resultData);
     }
 
     public void updateUser(User user) {

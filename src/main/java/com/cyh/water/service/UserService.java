@@ -9,7 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
+    //  用户登录
     ResultJSON loginUser(User user);
+
+    // 登录后 获取相关信息
+    ResultJSON getInfo(String token);
 
     void updateUser(User user);
 
@@ -56,4 +60,5 @@ public interface UserService {
 
     //根据用户id 获取有效角色的id集合
     List<Integer> getRolesListByUserId(int userId);
+
 }

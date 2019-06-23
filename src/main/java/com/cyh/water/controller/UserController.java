@@ -38,9 +38,11 @@ public class UserController {
     }
 
     @RequestMapping("getInfo")
-    public String getInfo(){
-
-        return "";
+    public String getInfo(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        System.out.println(token);
+        ResultJSON resultJSON = userService.getInfo(token);
+        return JSON.toJSONString(resultJSON);
     }
 
     /*// 调用计算器

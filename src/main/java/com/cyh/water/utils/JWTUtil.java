@@ -62,10 +62,10 @@ public class JWTUtil {
      * @param token
      * @return
      */
-    public static String getUserId(String token) {
+    public static Integer getUserId(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("userId").asString();
+            return jwt.getClaim("userId").asInt();
         } catch (JWTDecodeException e) {
             return null;
         }
@@ -73,11 +73,10 @@ public class JWTUtil {
 
     /**
      * 生成签名,X min后过期
-     *
-     * @param userName 用户名
+     * @param userId 用户名
      * @return 加密的token
      */
-    public static String sign(String userName,int userId) {
+    public static String sign(int userId) {
         try {
 //            过期时间
             Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
@@ -90,7 +89,6 @@ public class JWTUtil {
             // 附带username，userId信息，生成签名
             return JWT.create()
                     .withHeader(header)
-                    .withClaim("userName", userName)
                     .withClaim("userId",userId)
                     .withExpiresAt(date)
                     .sign(algorithm);
