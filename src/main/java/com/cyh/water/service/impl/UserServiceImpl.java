@@ -100,6 +100,11 @@ public class UserServiceImpl implements UserService {
             Thread thread = new Thread(slu);
             thread.start();
         }
+
+        resultData.put("roles","roles");
+        resultData.put("name","name");
+        resultData.put("avatar","avatar");
+        resultData.put("introduction","introduction");
         return new ResultJSON(Constants.SUCCESS, "获取信息成功！", resultData);
     }
 

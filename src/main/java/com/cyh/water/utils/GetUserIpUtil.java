@@ -28,35 +28,7 @@ public final class GetUserIpUtil {
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        String realIP = null;
-        String tempIP1  = request.getParameter("ip1"); //从页面上获取的上网ip1
-        String tempIP2  = request.getParameter("ip2"); //从页面上获取的上网ip2
-        if(StringUtils.isBlank(tempIP1)){
-            if(StringUtils.isBlank(tempIP2)){
-                //页面获取的两个ip都为空
-                realIP = ip;
-            }else{
-                realIP = tempIP2;
-            }
-        }else{
-            if(StringUtils.isBlank(tempIP2)){
-                realIP = tempIP1;
-            }else{
-                if(tempIP1.equals(tempIP2)){
-                    realIP = tempIP1;
-                }else{
-                    if(tempIP1.equals(ip)){
-                        realIP = tempIP1;
-                    }else if(tempIP2.equals(ip)){
-                        realIP = tempIP2;
-                    }else{
-                        System.out.println("三个ip都不相等！");
-                        realIP = ip;
-                    }
-                }
-            }
-        }
-        return getAddressByIp(realIP);
+        return getAddressByIp(ip);
     }
 
     private static JSONObject getAddressByIp(String IP){
